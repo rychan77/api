@@ -1,0 +1,58 @@
+import requests
+from tkinter import *
+
+def getStuff():
+	myurl = "https://www.themealdb.com/api/json/v1/1/filter.php?i=" + e1.get()
+	response = requests.get(myurl)
+	datajson = response.json()
+	writeitOut(datajson)
+
+def writeitOut(datajson):
+	file_o = open("food.html","w")
+	file_o.write("<link rel='stylesheet' type='text/css' href='mystyle.css'>")
+	file_o.write("<div id = 'background'>")
+	file_o.write("<body style='margin:0; opacity:1.5;'> <img src='food.png' width=100%></body>")
+	file_o.write("<h1>""There are " + str(len(datajson['meals'])) + " " + "foods to make with " + e1.get() + ":" + "</h1>")
+	file_o.write("<table><tr>")
+
+	counter=0
+	for i in range(len(datajson['meals'])):
+		file_o.write("<td>" + "<p>" + datajson["meals"][i]["strMeal"] + "</p>")
+		file_o.write("<h3>" + "<img src=" + datajson["meals"][i]["strMealThumb"] + " height=60%>" + "</td>" + "</h3>")
+		counter=counter+1
+		if counter==3:
+			file_o.write("</tr>" + "<tr>")
+			counter=0
+	file_o.write("<br>")
+	file_o.write("</tr>" + "</table>")
+	file_o.write("</div>")
+	file_o.close()
+
+
+root = Tk()
+root.title('Meal API')
+root.geometry("500x400")
+#root.config(bg='systemTransparent')
+filename = PhotoImage(file = "floor.jpg")
+background_label = Label(root, image=filename)
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+lab = Label(root, text = "What to do with leftover \n ingredients?")
+#lab.config(bg="systemTransparent")
+lab.config(font=("Times",45))
+lab.place(x=15, y=30)
+
+img = PhotoImage(file = "food2.jpg")
+imglabel = Label(background_label, image=img)
+imglabel.place(x=260, y=170, width=200, height=210)
+
+text = Label(root, text = "Type the ingredient below:\n(ex. beef, chicken, peas)")
+text.config(font=("Times",16))
+text.place(x=30, y=180, width=190, height=40)
+
+e1 = Entry(root, width=20) 
+b1 = Button(root,text="Generate list of meals", command=getStuff)
+e1.grid(padx=30, pady=(240,0))
+b1.grid(padx=50, pady=(30,0))
+
+mainloop()
