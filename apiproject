@@ -1,7 +1,5 @@
 import requests
-from tkinter import messagebox
 from tkinter import *
-
 
 try:
     x =requests.get("https://www.google.com")
@@ -12,10 +10,10 @@ def getStuff():
 	myurl = "https://www.themealdb.com/api/json/v1/1/filter.php?i=" + e1.get()
 	response = requests.get(myurl)
 	datajson = response.json()
-	if 'strMeal' not in datajson:
-		messagebox.showinfo("Invalid Input", "Spelling error or ingredient listed is not in API database")
+	writeitOut(datajson)
 
-	else:
+def writeitOut(datajson):
+
 		file_o = open("food.html","w")
 		file_o.write("<link rel='stylesheet' type='text/css' href='mystyle.css'>")
 		file_o.write("<div id = 'background'>")
@@ -35,8 +33,6 @@ def getStuff():
 		file_o.write("</tr>" + "</table>")
 		file_o.write("</div>")
 		file_o.close()
-
-
 root = Tk()
 root.title('Meal API')
 root.geometry("500x400")
@@ -49,6 +45,7 @@ lab = Label(root, text = "What to do with leftover \n ingredients?")
 #lab.config(bg="systemTransparent")
 lab.config(font=("Times",45))
 lab.place(x=15, y=30)
+root.wm_attributes('-transparent','1')
 
 img = PhotoImage(file = "food2.jpg")
 imglabel = Label(background_label, image=img)
